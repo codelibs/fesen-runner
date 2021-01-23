@@ -170,7 +170,7 @@ public class FesenRunner implements Closeable {
     protected int baseHttpPort = 9200;
 
     @Option(name = "-clusterName", usage = "Cluster name.")
-    protected String clusterName = "elasticsearch-cluster-runner";
+    protected String clusterName = "fesen-runner";
 
     @Option(name = "-indexStoreType", usage = "Index store type.")
     protected String indexStoreType = "fs";
@@ -645,7 +645,7 @@ public class FesenRunner implements Closeable {
     }
 
     /**
-     * Return an elasticsearch client.
+     * Return an fesen client.
      *
      * @return client
      */
@@ -654,7 +654,7 @@ public class FesenRunner implements Closeable {
     }
 
     /**
-     * Return an elasticsearch admin client.
+     * Return an fesen admin client.
      *
      * @return admin client
      */
