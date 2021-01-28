@@ -211,13 +211,9 @@ public class FesenRunner implements Closeable {
                 if (runner.isClosed()) {
                     break;
                 }
-                try {
-                    Thread.sleep(5000);
-                } catch (final InterruptedException e) {
-                    // no-op
-                }
+                Thread.sleep(5000);
             }
-        } catch (final IOException e) {
+        } catch (final Exception e) {
             System.exit(1);
         }
     }
@@ -271,26 +267,19 @@ public class FesenRunner implements Closeable {
      */
     public void clean() {
         final Path bPath = FileSystems.getDefault().getPath(basePath);
-        for (int i = 0; i < 3; i++) {
-            try {
-                final CleanUpFileVisitor visitor = new CleanUpFileVisitor();
-                Files.walkFileTree(bPath, visitor);
-                if (!visitor.hasErrors()) {
-                    print("Deleted " + basePath);
-                    return;
-                } else if (useLogger && logger.isDebugEnabled()) {
-                    for (final Throwable t : visitor.getErrors()) {
-                        logger.debug("Could not delete files/directories.", t);
-                    }
-                }
-            } catch (final Exception e) {
-                print(e.getMessage() + " Retring to delete it.");
-                try {
-                    Thread.sleep(1000);
-                } catch (final InterruptedException ignore) {
-                    // ignore
+        try {
+            final CleanUpFileVisitor visitor = new CleanUpFileVisitor();
+            Files.walkFileTree(bPath, visitor);
+            if (!visitor.hasErrors()) {
+                print("Deleted " + basePath);
+                return;
+            } else if (useLogger && logger.isDebugEnabled()) {
+                for (final Throwable t : visitor.getErrors()) {
+                    logger.debug("Could not delete files/directories.", t);
                 }
             }
+        } catch (final Exception e) {
+            print(e.getMessage() + " Retring to delete it.");
         }
         print("Failed to delete " + basePath + " in this process.");
     }
