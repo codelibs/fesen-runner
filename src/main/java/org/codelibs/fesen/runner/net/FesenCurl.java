@@ -28,10 +28,9 @@ import org.codelibs.fesen.common.xcontent.NamedXContentRegistry;
 import org.codelibs.fesen.common.xcontent.json.JsonXContent;
 import org.codelibs.fesen.node.Node;
 
-@Deprecated
-public class EcrCurl {
+public class FesenCurl {
 
-    protected EcrCurl() {
+    protected FesenCurl() {
         // nothing
     }
 

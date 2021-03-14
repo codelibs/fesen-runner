@@ -34,7 +34,7 @@ import org.codelibs.fesen.common.xcontent.XContentBuilder;
 import org.codelibs.fesen.common.xcontent.XContentFactory;
 import org.codelibs.fesen.index.query.QueryBuilders;
 import org.codelibs.fesen.node.Node;
-import org.codelibs.fesen.runner.net.EcrCurl;
+import org.codelibs.fesen.runner.net.FesenCurl;
 import org.codelibs.fesen.search.sort.SortBuilders;
 
 import junit.framework.TestCase;
@@ -207,41 +207,41 @@ public class FesenRunnerTest extends TestCase {
         // http access
         // get
         try (CurlResponse curlResponse =
-                EcrCurl.get(node, "/_search").header("Content-Type", "application/json").param("q", "*:*").execute()) {
+                FesenCurl.get(node, "/_search").header("Content-Type", "application/json").param("q", "*:*").execute()) {
             final String content = curlResponse.getContentAsString();
             assertNotNull(content);
             assertTrue(content.contains("total"));
-            final Map<String, Object> map = curlResponse.getContent(EcrCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("false", map.get("timed_out").toString());
         }
 
         // post
-        try (CurlResponse curlResponse = EcrCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
                 .body("{\"id\":\"2000\",\"msg\":\"test 2000\"}").execute()) {
-            final Map<String, Object> map = curlResponse.getContent(EcrCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
 
         // put
-        try (CurlResponse curlResponse = EcrCurl.put(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.put(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json")
                 .body("{\"id\":\"2001\",\"msg\":\"test 2001\"}").execute()) {
-            final Map<String, Object> map = curlResponse.getContent(EcrCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
 
         // delete
         try (CurlResponse curlResponse =
-                EcrCurl.delete(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json").execute()) {
-            final Map<String, Object> map = curlResponse.getContent(EcrCurl.jsonParser());
+                FesenCurl.delete(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json").execute()) {
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("deleted", map.get("result"));
         }
 
         // post
-        try (CurlResponse curlResponse = EcrCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
                 .onConnect((curlRequest, connection) -> {
                     connection.setDoOutput(true);
                     try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))) {
@@ -251,7 +251,7 @@ public class FesenRunnerTest extends TestCase {
                         throw new CurlException("Failed to write data.", e);
                     }
                 }).execute()) {
-            final Map<String, Object> map = curlResponse.getContent(EcrCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
