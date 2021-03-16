@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -246,6 +247,12 @@ public class FesenRunner implements Closeable {
         for (final Node node : nodeList) {
             try {
                 node.close();
+                if (!node.awaitClose(10, TimeUnit.SECONDS)) {
+                    print("Failed to close node: "
+                            + node.settings().get(NODE_NAME, "unknown"));
+                }
+            } catch (final InterruptedException e) {
+                logger.debug("Interupted closing process.", e);
             } catch (final IOException e) {
                 exceptionList.add(e);
             }
