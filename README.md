@@ -1,4 +1,5 @@
 Fesen Runner
+[![Java CI with Maven](https://github.com/codelibs/fesen-runner/actions/workflows/maven.yml/badge.svg)](https://github.com/codelibs/fesen-runner/actions/workflows/maven.yml)
 ============
 
 This project runs Fesen cluster on one JVM instance for your development/testing easily.
