@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.codelibs.fesen</groupId>
 	<artifactId>fesen-runner</artifactId>
-	<version>0.15.0-SNAPSHOT</version>
+	<version>0.15.0</version>
 	<packaging>jar</packaging>
 	<name>Fesen Runner</name>
 	<inceptionYear>2011</inceptionYear>
