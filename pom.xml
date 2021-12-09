@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.codelibs.fesen</groupId>
 	<artifactId>fesen-runner</artifactId>
-	<version>0.15.1-SNAPSHOT</version>
+	<version>0.16.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>Fesen Runner</name>
 	<inceptionYear>2011</inceptionYear>
@@ -29,9 +29,9 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<fesen.version>0.15.0</fesen.version>
+		<fesen.version>0.16.0-SNAPSHOT</fesen.version>
 		<elasticsearch.version>7.10.2</elasticsearch.version>
-		<lucene.version>8.9.0</lucene.version>
+		<lucene.version>8.10.1</lucene.version>
 		<log4j.version>2.14.1</log4j.version>
 		<jna.version>5.7.0</jna.version>
 		<jts-core.version>1.15.0</jts-core.version>
