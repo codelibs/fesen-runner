@@ -29,7 +29,7 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<fesen.version>0.16.0-SNAPSHOT</fesen.version>
+		<fesen.version>0.16.0</fesen.version>
 		<elasticsearch.version>7.10.2</elasticsearch.version>
 		<lucene.version>8.10.1</lucene.version>
 		<log4j.version>2.16.0</log4j.version>
