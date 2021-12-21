@@ -52,8 +52,7 @@ public class FesenCurl {
 
     protected static String getUrl(final Node node, final String path) {
         final StringBuilder urlBuf = new StringBuilder(200);
-        urlBuf.append("http://localhost:")
-                .append(node.settings().get("http.port"));
+        urlBuf.append("http://localhost:").append(node.settings().get("http.port"));
         if (path.startsWith("/")) {
             urlBuf.append(path);
         } else {
@@ -84,10 +83,7 @@ public class FesenCurl {
 
     protected static final Function<CurlResponse, Map<String, Object>> PARSER = response -> {
         try (InputStream is = response.getContentAsStream()) {
-            return JsonXContent.jsonXContent
-                    .createParser(NamedXContentRegistry.EMPTY,
-                            LoggingDeprecationHandler.INSTANCE, is)
-                    .map();
+            return JsonXContent.jsonXContent.createParser(NamedXContentRegistry.EMPTY, LoggingDeprecationHandler.INSTANCE, is).map();
         } catch (final Exception e) {
             throw new CurlException("Failed to access the content.", e);
         }

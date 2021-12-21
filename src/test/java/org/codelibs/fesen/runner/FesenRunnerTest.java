@@ -58,10 +58,8 @@ public class FesenRunnerTest extends TestCase {
             public void build(final int number, final Builder settingsBuilder) {
                 settingsBuilder.put("http.cors.enabled", true);
                 settingsBuilder.put("http.cors.allow-origin", "*");
-                settingsBuilder.putList("discovery.seed_hosts",
-                        "127.0.0.1:9301", "127.0.0.1:9302");
-                settingsBuilder.putList("cluster.initial_master_nodes",
-                        "127.0.0.1:9301");
+                settingsBuilder.putList("discovery.seed_hosts", "127.0.0.1:9301", "127.0.0.1:9302");
+                settingsBuilder.putList("cluster.initial_master_nodes", "127.0.0.1:9301");
             }
         }).build(newConfigs().clusterName(clusterName).numOfNode(NUM_OF_NODES));
 
@@ -141,11 +139,8 @@ public class FesenRunnerTest extends TestCase {
 
         // create 1000 documents
         for (int i = 1; i <= 1000; i++) {
-            final IndexResponse indexResponse1 = runner.insert(index,
-                    String.valueOf(i),
-                    "{\"id\":\"" + i + "\",\"msg\":\"test " + i
-                            + "\",\"order\":" + i
-                            + ",\"@timestamp\":\"2000-01-01T00:00:00\"}");
+            final IndexResponse indexResponse1 = runner.insert(index, String.valueOf(i),
+                    "{\"id\":\"" + i + "\",\"msg\":\"test " + i + "\",\"order\":" + i + ",\"@timestamp\":\"2000-01-01T00:00:00\"}");
             assertEquals(Result.CREATED, indexResponse1.getResult());
         }
         runner.refresh();
@@ -163,8 +158,7 @@ public class FesenRunnerTest extends TestCase {
             final GetAliasesResponse aliasesResponse = runner.getAlias(alias);
             assertEquals(1, aliasesResponse.getAliases().size());
             assertEquals(1, aliasesResponse.getAliases().get(index).size());
-            assertEquals(alias,
-                    aliasesResponse.getAliases().get(index).get(0).alias());
+            assertEquals(alias, aliasesResponse.getAliases().get(index).get(0).alias());
         }
 
         {
@@ -175,16 +169,13 @@ public class FesenRunnerTest extends TestCase {
 
         // search 1000 documents
         {
-            final SearchResponse searchResponse = runner.search(index, null,
-                    null, 0, 10);
+            final SearchResponse searchResponse = runner.search(index, null, null, 0, 10);
             assertEquals(1000, searchResponse.getHits().getTotalHits().value);
             assertEquals(10, searchResponse.getHits().getHits().length);
         }
 
         {
-            final SearchResponse searchResponse = runner.search(index,
-                    QueryBuilders.matchAllQuery(), SortBuilders.fieldSort("id"),
-                    0, 10);
+            final SearchResponse searchResponse = runner.search(index, QueryBuilders.matchAllQuery(), SortBuilders.fieldSort("id"), 0, 10);
             assertEquals(1000, searchResponse.getHits().getTotalHits().value);
             assertEquals(10, searchResponse.getHits().getHits().length);
         }
@@ -199,8 +190,7 @@ public class FesenRunnerTest extends TestCase {
         runner.flush();
 
         {
-            final SearchResponse searchResponse = runner.search(index, null,
-                    null, 0, 10);
+            final SearchResponse searchResponse = runner.search(index, null, null, 0, 10);
             assertEquals(999, searchResponse.getHits().getTotalHits().value);
             assertEquals(10, searchResponse.getHits().getHits().length);
         }
@@ -211,71 +201,57 @@ public class FesenRunnerTest extends TestCase {
         // upgrade
         runner.upgrade();
 
+
         final Node node = runner.node();
 
         // http access
         // get
-        try (CurlResponse curlResponse = FesenCurl.get(node, "/_search")
-                .header("Content-Type", "application/json").param("q", "*:*")
-                .execute()) {
+        try (CurlResponse curlResponse =
+                FesenCurl.get(node, "/_search").header("Content-Type", "application/json").param("q", "*:*").execute()) {
             final String content = curlResponse.getContentAsString();
             assertNotNull(content);
             assertTrue(content.contains("total"));
-            final Map<String, Object> map = curlResponse
-                    .getContent(FesenCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("false", map.get("timed_out").toString());
         }
 
         // post
-        try (CurlResponse curlResponse = FesenCurl
-                .post(node, "/" + index + "/_doc/")
-                .header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
                 .body("{\"id\":\"2000\",\"msg\":\"test 2000\"}").execute()) {
-            final Map<String, Object> map = curlResponse
-                    .getContent(FesenCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
 
         // put
-        try (CurlResponse curlResponse = FesenCurl
-                .put(node, "/" + index + "/_doc/2001")
-                .header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.put(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json")
                 .body("{\"id\":\"2001\",\"msg\":\"test 2001\"}").execute()) {
-            final Map<String, Object> map = curlResponse
-                    .getContent(FesenCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
 
         // delete
-        try (CurlResponse curlResponse = FesenCurl
-                .delete(node, "/" + index + "/_doc/2001")
-                .header("Content-Type", "application/json").execute()) {
-            final Map<String, Object> map = curlResponse
-                    .getContent(FesenCurl.jsonParser());
+        try (CurlResponse curlResponse =
+                FesenCurl.delete(node, "/" + index + "/_doc/2001").header("Content-Type", "application/json").execute()) {
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("deleted", map.get("result"));
         }
 
         // post
-        try (CurlResponse curlResponse = FesenCurl
-                .post(node, "/" + index + "/_doc/")
-                .header("Content-Type", "application/json")
+        try (CurlResponse curlResponse = FesenCurl.post(node, "/" + index + "/_doc/").header("Content-Type", "application/json")
                 .onConnect((curlRequest, connection) -> {
                     connection.setDoOutput(true);
-                    try (BufferedWriter writer = new BufferedWriter(
-                            new OutputStreamWriter(connection.getOutputStream(),
-                                    "UTF-8"))) {
+                    try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(connection.getOutputStream(), "UTF-8"))) {
                         writer.write("{\"id\":\"2002\",\"msg\":\"test 2002\"}");
                         writer.flush();
                     } catch (IOException e) {
                         throw new CurlException("Failed to write data.", e);
                     }
                 }).execute()) {
-            final Map<String, Object> map = curlResponse
-                    .getContent(FesenCurl.jsonParser());
+            final Map<String, Object> map = curlResponse.getContent(FesenCurl.jsonParser());
             assertNotNull(map);
             assertEquals("created", map.get("result"));
         }
